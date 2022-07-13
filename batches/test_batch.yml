@@ -7,4 +7,5 @@ context_stage_mappings:
   - name: "FND"
     job_groups:
     - "generic_pipeline"
+    - "test"
 folder: "/new_approach"
