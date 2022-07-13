@@ -1,0 +1,31 @@
+version: 1
+job:
+  type: "ingestion"
+source:
+  endpoint: "dbfs_personal"
+  properties:
+    source_file_pattern: "new_emp2-2.csv"
+    format: "delimited"
+    charset: "UTF-8"
+    partial_load: false
+    format_properties:
+      column_delimiter: ","
+      quote_delimiter: "\""
+      escape_char: "\\\\"
+      contains_header: true
+      infer_schema: true
+      clean_column_name: false
+      trim_white_space: "none"
+schema:
+  schema_derivation_strategy: "target"
+  strict_schema_check: true
+  discard: true
+target:
+  endpoint: "delta2"
+  properties:
+    table: "schema_drift_operations.sec6_2_emp"
+    auto_create_table: false
+    merge_schema: false
+    overwrite_schema: true
+  operation: "overwrite"
+folder: "/issue_40"

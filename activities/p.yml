@@ -1,0 +1,15 @@
+version: 1
+job:
+  type: "processing"
+source:
+  endpoint: "delta2"
+  properties:
+    table: "aa"
+target:
+  endpoint: "delta2"
+  operation: "merge"
+  incremental: false
+  properties:
+    table: "table2"
+  primary_key_columns:
+  - "id"

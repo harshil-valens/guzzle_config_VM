@@ -1,0 +1,36 @@
+version: 1
+job:
+  type: "ingestion"
+source:
+  endpoint: "test_version"
+  properties:
+    source_file_pattern: "/student_withstring.csv"
+    format: "delimited"
+    charset: "UTF-8"
+    partial_load: false
+    format_properties:
+      column_delimiter: ","
+      quote_delimiter: "\""
+      escape_char: "\\\\"
+      contains_header: true
+      infer_schema: false
+      clean_column_name: false
+      trim_white_space: "none"
+schema:
+  schema_derivation_strategy: "source"
+  strict_schema_check: true
+  discard: true
+  columns:
+  - name: "roll_no"
+    data_type:
+      value: "int"
+    nullable:
+      value: true
+target:
+  endpoint: "delta"
+  properties:
+    table: "schema_drift_operations.students"
+    auto_create_table: false
+    merge_schema: true
+  operation: "append"
+folder: "/issue_40"

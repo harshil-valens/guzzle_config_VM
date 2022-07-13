@@ -1,0 +1,9 @@
+version: 1
+job:
+  type: "housekeeping"
+housekeeping:
+  properties:
+    table: "table"
+  operation: "delete"
+  reference_point:
+    reference_type: "current_time"

@@ -1,0 +1,18 @@
+version: 1
+job:
+  type: "housekeeping"
+housekeeping:
+  endpoint: "delta2"
+  properties:
+    table: "default.housekeeping_delta"
+  housekeeping_column: "created_time"
+  operation: "delete"
+  reference_point:
+    reference_type: "current_time"
+  retention_strategies:
+  - partitions: []
+    retention_strategy: "010d, *w, *m, *q, *y"
+    day_of_week: 1
+    strict_retention_period_end: false
+    strict_retention_grain: []
+folder: "/test_with_new_app"

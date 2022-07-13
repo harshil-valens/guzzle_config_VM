@@ -1,0 +1,21 @@
+version: 1
+job:
+  type: "ingestion"
+source:
+  endpoint: "asa"
+  properties:
+    table: "src_test"
+    format_properties:
+      clean_column_name: false
+schema:
+  schema_derivation_strategy: "source"
+  strict_schema_check: true
+  discard: true
+target:
+  endpoint: "asa"
+  properties:
+    table: "tgt_test"
+    format_properties:
+      write_semantics: "polybase"
+      max_str_length: 4000
+  operation: "append"

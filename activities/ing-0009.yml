@@ -1,0 +1,69 @@
+version: 1
+job:
+  type: "ingestion"
+source:
+  endpoint: "lo_adls"
+  properties:
+    source_file_pattern: "employee_data_type_validation*.csv"
+    format: "delimited"
+    charset: "UTF-8"
+    partial_load: true
+    format_properties:
+      column_delimiter: ","
+      quote_delimiter: "\""
+      escape_char: "\\\\"
+      contains_header: true
+      infer_schema: false
+      clean_column_name: false
+      trim_white_space: "none"
+schema:
+  schema_derivation_strategy: "source"
+  strict_schema_check: true
+  discard: true
+  columns:
+  - name: "id"
+    data_type:
+      value: "int"
+      validate: true
+    primary_key:
+      value: true
+  - name: "name"
+    data_type:
+      value: "varchar(20)"
+      validate: true
+  - name: "gender"
+    data_type:
+      value: "varchar(6)"
+      validate: true
+  - name: "salary"
+    data_type:
+      value: "int"
+      validate: true
+  - name: "birthdate"
+    data_type:
+      value: "date"
+      validate: true
+  - name: "createdtime"
+    data_type:
+      value: "timestamp"
+      validate: true
+  - name: "system"
+    transform_sql:
+      value: "'${system}'"
+    partition_column: true
+  - name: "location"
+    transform_sql:
+      value: "'${location}'"
+    partition_column: true
+target:
+  endpoint: "lo_hive"
+  properties:
+    table: "employee_valid"
+  operation: "append"
+reject:
+  endpoint: "lo_hive"
+  failure_threshold: 90
+  properties:
+    table: "employee_invalid"
+    auto_create_table: true
+folder: "/issue_39"

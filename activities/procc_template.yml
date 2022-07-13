@@ -1,0 +1,24 @@
+version: 1
+job:
+  type: "processing"
+source:
+  endpoint: "delta2"
+  properties:
+    table: "employee"
+target:
+  endpoint: "delta2"
+  operation: "merge"
+  incremental: false
+  soft_delete: false
+  properties:
+    table: "tgt_employee_template"
+    template: "default"
+  primary_key_columns:
+  - "id"
+  additional_columns:
+  - name: "created_at"
+    framework_column: "w_created_ts"
+  - name: "refresh_at"
+    framework_column: "w_refresh_ts"
+  - name: "record_flag"
+    framework_column: "w_current_record_flag"

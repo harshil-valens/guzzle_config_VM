@@ -1,0 +1,21 @@
+version: 1
+description: ""
+parallel: 2
+properties:
+  auto_dependency: true
+jobs:
+- "user_0_4_sql"
+- "user_0_1_sql"
+- "user_1_4_sql"
+- "user_0_2_sql"
+- "user_0_3_sql"
+- "user_3_4_sql"
+- "user_4_5_sql"
+- "user_2_infinite"
+- "user_7"
+- "user_4_sql"
+- "user_5_6_sql"
+- "user_8"
+- "processing_sql_user"
+- "user_11_21"
+- "user_13"

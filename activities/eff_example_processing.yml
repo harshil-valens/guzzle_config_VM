@@ -1,0 +1,31 @@
+version: 1
+job:
+  type: "processing"
+source:
+  endpoint: "delta2"
+  properties:
+    table: "employee"
+target:
+  endpoint: "delta2"
+  operation: "effective_date_merge"
+  incremental: false
+  soft_delete: false
+  properties:
+    table: "employee_eff"
+  primary_key_columns:
+  - "id"
+  additional_columns:
+  - name: "created_at"
+    framework_column: "w_created_ts"
+  - name: "refresh_at"
+    framework_column: "w_refresh_ts"
+  - name: "record_flag"
+    framework_column: "w_current_record_flag"
+  - name: "eff_start"
+    framework_column: "w_eff_start_date_ts"
+  - name: "eff_end"
+    framework_column: "w_eff_end_date_ts"
+  - name: "seq_key"
+    framework_column: "w_sequence_key"
+  - name: "version_key"
+    framework_column: "w_version_key"

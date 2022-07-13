@@ -1,0 +1,18 @@
+version: 1
+job:
+  type: "constraint_checks"
+source:
+  endpoint: "delta2"
+  primary_keys:
+  - "id"
+  properties:
+    table: "recon_demo.recon_1"
+validation_rules:
+  age gt 20:
+    sql: "age > 20"
+    constraint_data: "age"
+  salary gt 20000:
+    sql: "salary > 20000"
+    constraint_data: "name"
+    detail_check_enabled: true
+folder: "/test_with_new_app"

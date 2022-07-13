@@ -1,0 +1,52 @@
+version: 1
+job:
+  type: "ingestion"
+source:
+  endpoint: "dbfs_personal"
+  properties:
+    source_file_pattern: "csv_employee/new_emp.csv"
+    format: "delimited"
+    charset: "UTF-8"
+    partial_load: false
+    format_properties:
+      column_delimiter: ","
+      quote_delimiter: "\""
+      escape_char: "\\\\"
+      contains_header: true
+      infer_schema: true
+      clean_column_name: false
+      trim_white_space: "none"
+schema:
+  schema_derivation_strategy: "schema"
+  strict_schema_check: true
+  discard: true
+  columns:
+  - name: "id"
+    data_type:
+      value: "bigint"
+    nullable:
+      value: true
+  - name: "name"
+    data_type:
+      value: "string"
+    nullable:
+      value: true
+  - name: "gender"
+    data_type:
+      value: "varchar(7)"
+    nullable:
+      value: true
+  - name: "birthdate"
+    data_type:
+      value: "date"
+    nullable:
+      value: true
+target:
+  endpoint: "delta2"
+  properties:
+    table: "schema_drift_operations.sec9_2_emp"
+    auto_create_table: false
+    merge_schema: false
+    overwrite_schema: true
+  operation: "overwrite"
+folder: "/issue_40"

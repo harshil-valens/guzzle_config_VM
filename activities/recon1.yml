@@ -1,0 +1,26 @@
+version: 1
+job:
+  type: "recon"
+source:
+  endpoint: "delta2"
+  properties:
+    table: "users"
+    filter: "id = 2"
+target:
+  endpoint: "delta2"
+  properties:
+    table: "employee"
+    filter: "id = 2"
+recon:
+  primary_keys:
+  - "id"
+  - "name"
+  - "n"
+  - "na"
+  grouping_columns:
+  - "id"
+  - "salary"
+  recon_metrics:
+    rule1:
+      source_aggregation: "first_name = \"Demetrius\""
+      target_aggregation: "name = \"yash\""

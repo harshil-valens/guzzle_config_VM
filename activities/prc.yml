@@ -1,0 +1,26 @@
+version: 1
+job:
+  type: "processing"
+source:
+  endpoint: "jdbc"
+  properties:
+    table: "test_src"
+target:
+  endpoint: "atomicExam"
+  operation: "effective_date_merge"
+  incremental: false
+  properties:
+    table: "student"
+    history_columns:
+    - "name"
+  primary_key_columns:
+  - "id"
+  additional_columns:
+  - name: "created_at"
+    framework_column: "w_created_ts"
+  - name: "refresh_at"
+    framework_column: "w_refresh_ts"
+  - name: "flag"
+    framework_column: "w_current_record_flag"
+  truncate_partition_columns:
+  - name: "id"

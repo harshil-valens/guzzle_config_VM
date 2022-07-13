@@ -1,0 +1,26 @@
+version: 1
+job:
+  type: "processing"
+source:
+  endpoint: "atomicExam"
+  properties:
+    table: "employee_atomic_src"
+    filter: "age = 22"
+target:
+  endpoint: "atomicExam"
+  operation: "merge"
+  incremental: false
+  soft_delete: false
+  properties:
+    table: "employee_atomic_tgt"
+  primary_key_columns:
+  - "id"
+  merge_columns:
+  - "status"
+  additional_columns:
+  - name: "country"
+    value: "aa"
+  - name: "city"
+  truncate_partition_columns:
+  - name: "age"
+    value: "22"

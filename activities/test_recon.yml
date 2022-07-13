@@ -1,0 +1,23 @@
+version: 1
+job:
+  type: "recon"
+source:
+  endpoint: "delta2"
+  properties:
+    table: "sales_records_withPart3"
+target:
+  endpoint: "delta2"
+  properties:
+    table: "sales_records_withPart3"
+recon:
+  primary_keys:
+  - "order_id"
+  execution_site: "source"
+  recon_metrics:
+    count check:
+      source_aggregation: "count(1)"
+      target_aggregation: "count(1)"
+    sum of distance:
+      detail_check_enabled: true
+      source_aggregation: "sum(total_revenue)"
+      target_aggregation: "sum(total_revenue)"

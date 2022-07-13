@@ -1,0 +1,41 @@
+version: 1
+job:
+  type: "ingestion"
+source:
+  endpoint: "delta2"
+  properties:
+    table: "`atomicexample`.`employee`"
+    exclude_columns:
+    - "age"
+    format_properties:
+      clean_column_name: false
+schema:
+  schema_derivation_strategy: "source"
+  strict_schema_check: true
+  discard: true
+  columns:
+  - name: "system"
+    transform_sql:
+      value: "default"
+    data_type:
+      value: "varchar(30)"
+    nullable:
+      value: true
+  - name: "location"
+    transform_sql:
+      value: "ahm"
+    data_type:
+      value: "varchar(30)"
+    nullable:
+      value: true
+target:
+  endpoint: "azuresql"
+  properties:
+    table: "emp"
+    format_properties:
+      batch_size: 2500
+      bulk_copy_timeout: 600
+      isolation_level: "READ_COMMITTED"
+      reliability_level: "BEST_EFFORT"
+      table_lock: true
+  operation: "append"

@@ -1,0 +1,34 @@
+version: 1
+description: ""
+parallel: 1
+properties:
+  auto_dependency: false
+jobs:
+- generic_job:
+    job_parameters:
+      p_src_file_name: "ALSG_MK_XX_TargetRecords"
+      p_tgt_table_name: "ALSG_MK_XX_TargetRecords"
+- generic_job:
+    job_parameters:
+      p_src_file_name: "MK_XX_VehicleRecords"
+      p_tgt_table_name: "MK_XX_VehicleRecords"
+- generic_job:
+    job_parameters:
+      p_src_file_name: "SR_XX_QuoteDetails"
+      p_tgt_table_name: "SR_XX_QuoteDetails"
+- generic_job:
+    job_parameters:
+      p_src_file_name: "LUT_DD_XX_FranchiseRecords"
+      p_tgt_table_name: "LUT_DD_XX_FranchiseRecords"
+- generic_job:
+    job_parameters:
+      p_src_file_name: "SR_XX_VehicleAccessoriesVspec"
+      p_tgt_table_name: "sr_xx_vehicleaccessoriesvspec"
+- generic_job:
+    job_parameters:
+      p_src_file_name: "VS_XX_NewVehicleStock"
+      p_tgt_table_name: "VS_XX_NewVehicleStock"
+- generic_job:
+    job_parameters:
+      p_src_file_name: "VS_XX_VehicleSpecification"
+      p_tgt_table_name: "VS_XX_VehicleSpecification"

@@ -1,0 +1,18 @@
+version: 1
+job:
+  type: "processing"
+source:
+  endpoint: "delta2"
+  properties:
+    table: "employee"
+target:
+  endpoint: "delta2"
+  operation: "merge"
+  incremental: false
+  properties:
+    table: "table1"
+  primary_key_columns:
+  - "id"
+  additional_columns:
+  - name: "abcd"
+    framework_column: "w_eff_start_date_ts"

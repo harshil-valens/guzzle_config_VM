@@ -1,0 +1,10 @@
+version: 1
+context_stage_mappings:
+- context: {}
+  rerun_batch: false
+  stage_pairs:
+  - "SRI"
+  stages:
+  - name: "SRI"
+    job_groups:
+    - "cli_pipeline"

@@ -1,0 +1,70 @@
+version: 1
+job:
+  type: "ingestion"
+source:
+  endpoint: "lo_adls"
+  properties:
+    source_file_pattern: "csv/employee/employees_0019*.csv"
+    format: "delimited"
+    charset: "UTF-8"
+    partial_load: false
+    format_properties:
+      column_delimiter: ","
+      quote_delimiter: "\""
+      escape_char: "\\\\"
+      contains_header: true
+      infer_schema: false
+      clean_column_name: false
+      trim_white_space: "none"
+schema:
+  schema_derivation_strategy: "source"
+  columns:
+  - name: "gender"
+    data_type:
+      value: "string"
+      validate: true
+    nullable:
+      value: false
+  - name: "birthdate"
+    data_type:
+      value: "date"
+      validate: true
+  - name: "salary"
+    data_type:
+      value: "int"
+      validate: true
+  - name: "createdtime"
+    data_type:
+      value: "timestamp"
+      validate: true
+  - name: "system"
+    transform_sql:
+      value: "'${system}'"
+    data_type:
+      value: "string"
+      validate: true
+  - name: "location"
+    transform_sql:
+      value: "'${location}'"
+    data_type:
+      value: "string"
+      validate: true
+target:
+  endpoint: "lo_hive"
+  properties:
+    table: "valid_employee"
+    auto_create_table: true
+  operation: "append"
+reject:
+  endpoint: "lo_adls"
+  failure_threshold: 90
+  properties:
+    format: "xml"
+    path: "employee/invalid"
+    charset: "UTF-8"
+    preserve_hierarchy: false
+    format_properties:
+      merge_file: false
+      root_tag: "ROWS"
+      row_tag: "ROW"
+folder: "/issue_39"

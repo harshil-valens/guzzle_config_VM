@@ -1,0 +1,20 @@
+version: 1
+job:
+  type: "ingestion"
+source:
+  endpoint: "delta2"
+  properties:
+    table: "test"
+    format_properties:
+      clean_column_name: false
+schema:
+  schema_derivation_strategy: "source"
+  strict_schema_check: true
+  discard: true
+target:
+  endpoint: "delta2"
+  properties:
+    table: "test_tgt"
+    auto_create_table: true
+    merge_schema: false
+  operation: "append"

@@ -1,0 +1,35 @@
+version: 1
+job:
+  type: ingestion
+source:
+  endpoint: delta2
+  properties:
+    table: '`guzzle_test`.`employee`'
+    exclude_columns:
+      - id
+    format_properties:
+      clean_column_name: false
+schema:
+  schema_derivation_strategy: schema
+  strict_schema_check: true
+  discard: true
+  columns:
+    - name: new_col
+      transform_sql:
+        value: '"aa"'
+      nullable:
+        value: true
+    - name: NAME
+      transform_sql:
+        value: '"harhsil"'
+      data_type:
+        value: int
+      nullable:
+        value: true
+target:
+  endpoint: delta2
+  properties:
+    table: '`guzzle_test`.`new_tgt_table`'
+    auto_create_table: true
+    merge_schema: false
+  operation: append

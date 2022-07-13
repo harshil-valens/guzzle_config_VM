@@ -1,0 +1,27 @@
+version: 1
+job:
+  type: "processing"
+source:
+  endpoint: "hive"
+  properties:
+    table: "employee_hive"
+target:
+  endpoint: "hive"
+  operation: "effective_date_merge"
+  incremental: false
+  properties:
+    table: "employee_hive_tgt"
+  primary_key_columns:
+  - "id"
+  additional_columns:
+  - name: "created_time"
+    framework_column: "w_created_ts"
+  - name: "updated_time"
+    framework_column: "w_refresh_ts"
+  - name: "record_flag"
+    framework_column: "w_current_record_flag"
+  - name: "eff_start_time"
+    framework_column: "w_eff_start_date_ts"
+  - name: "eff_end_time"
+    framework_column: "w_eff_end_date_ts"
+folder: "/test_with_new_app"

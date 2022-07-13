@@ -1,0 +1,67 @@
+version: 1
+job:
+  type: "ingestion"
+source:
+  endpoint: "lo_lfs_2"
+  properties:
+    source_file_pattern: "validation_datatype*.csv"
+    format: "delimited"
+    charset: "UTF-8"
+    partial_load: false
+    format_properties:
+      column_delimiter: ","
+      quote_delimiter: "\""
+      escape_char: "\\\\"
+      contains_header: true
+      infer_schema: true
+      clean_column_name: false
+      trim_white_space: "none"
+schema:
+  schema_derivation_strategy: "schema"
+  strict_schema_check: true
+  discard: true
+  columns:
+  - name: "instance_id"
+    transform_sql:
+      value: "0001"
+    nullable:
+      value: true
+  - name: "full_name"
+    transform_sql:
+      value: "concat(first_name, ' ${additional_name}')"
+    data_type:
+      value: "varchar(20)"
+      validate: true
+    nullable:
+      value: true
+  - name: "system"
+    transform_sql:
+      value: "'default'"
+    data_type:
+      value: "string"
+      validate: false
+    nullable:
+      value: true
+  - name: "id"
+    nullable:
+      value: true
+target:
+  endpoint: "optimization_hive"
+  properties:
+    table: "validated_data_schema"
+    auto_create_table: true
+  operation: "append"
+reject:
+  endpoint: "lo_lfs_2"
+  properties:
+    format: "delimited"
+    path: "reject_multiple_schema/rejected_data"
+    charset: "UTF-8"
+    preserve_hierarchy: false
+    format_properties:
+      column_delimiter: ","
+      quote_delimiter: "\""
+      escape_char: "\\\\"
+      contains_header: true
+      merge_file: true
+folder: "/issue_40/optimization_datatype"

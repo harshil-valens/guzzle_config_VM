@@ -1,0 +1,24 @@
+version: 1
+job:
+  type: "recon"
+source:
+  endpoint: "delta2"
+  properties:
+    table: "recon_demo.recon_1"
+target:
+  endpoint: "delta2"
+  properties:
+    table: "recon_demo.recon_2"
+recon:
+  primary_keys:
+  - "id"
+  partial_match: true
+  recon_metrics:
+    sum of age:
+      source_aggregation: "sum(age)"
+      target_aggregation: "sum(age)"
+    sum of salary:
+      detail_check_enabled: true
+      source_aggregation: "sum(salary)"
+      target_aggregation: "sum(salary)"
+folder: "/test_with_new_app"

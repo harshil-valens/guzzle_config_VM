@@ -1,0 +1,30 @@
+version: 1
+job:
+  type: "ingestion"
+source:
+  endpoint: "adls"
+  properties:
+    source_file_pattern: "Guzzle CLIv2.xlsx"
+    format: "excel"
+    charset: "UTF-8"
+    partial_load: false
+    format_properties:
+      contains_header: true
+      infer_schema: false
+      clean_column_name: false
+      data_address: "A1"
+      empty_as_null: true
+      workbook_password: "guzzle"
+schema:
+  schema_derivation_strategy: "source"
+  strict_schema_check: true
+  discard: true
+target:
+  endpoint: "lo_lfs"
+  properties:
+    format: "json"
+    charset: "UTF-8"
+    path: "/json_tgt/"
+    preserve_hierarchy: false
+    format_properties:
+      merge_file: true

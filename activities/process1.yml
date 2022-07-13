@@ -1,0 +1,7 @@
+version: 1
+job:
+  type: "processing"
+source:
+  endpoint: "jdbc"
+target:
+  incremental: false

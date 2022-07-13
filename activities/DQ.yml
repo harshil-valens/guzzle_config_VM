@@ -1,0 +1,14 @@
+version: 1
+job:
+  type: "constraint_checks"
+source:
+  endpoint: "delta2"
+  primary_keys:
+  - "id"
+  grouping_columns:
+  - "name"
+  properties:
+    table: "employee1"
+validation_rules:
+  validation 2:
+    sql: "id = 3"

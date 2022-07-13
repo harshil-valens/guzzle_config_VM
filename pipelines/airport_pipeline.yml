@@ -1,0 +1,26 @@
+version: 1
+description: ""
+parallel: 2
+properties:
+  auto_dependency: true
+jobs:
+- "d_airports"
+- "d_carriers"
+- "d_planes"
+- "dq_check_flights"
+- "f_flight"
+- "flight_ml_data"
+- "recon_sri_vs_mart"
+- "sri_flights"
+- sri_generics:
+    job_parameters:
+      source_table: "source_airports"
+      target_table: "target_airports"
+- sri_generics:
+    job_parameters:
+      source_table: "source_carriers"
+      target_table: "target_carriers"
+- sri_generics:
+    job_parameters:
+      source_table: "source_plane"
+      target_table: "target_planes"

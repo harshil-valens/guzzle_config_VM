@@ -1,0 +1,188 @@
+version: 1
+job:
+  type: "ingestion"
+source:
+  endpoint: "largefileDelta"
+  properties:
+    query: |-
+      SELECT
+              'xx' AS PERIOD,
+              D.CUSTHASH,
+              C.CODE AS BRAND,
+              SUM(A.REV) AS REV_SALES,
+              0 AS REV_AFTERSALES,
+              0 AS REV_ACCESSORIES,
+              SUM(A.GP) AS GP_SALES,
+              0 AS GP_FINANCE,
+              0 AS GP_INSURANCE,
+              0 AS GP_AFTERSALES,
+              0 AS GP_ACCESSORIES
+            FROM
+              (
+                SELECT
+                  SUM(REV) AS REV,
+                  SUM(GP) AS GP,
+                  STKNUM,
+                  MKXXCODE
+                FROM
+                  (
+                    SELECT
+                      A1.REV,
+                      A1.GP,
+                      A2.STKNUM,
+                      A2.MKXXCODE
+                    FROM
+                      (
+                        SELECT
+                          INVALUE + VAT AS REV,
+                          INVALUE - ACTCOST AS GP,
+                          MAGIC,
+                          XXCODE
+                        FROM
+                          largefiles.SR_XX_VehicleAccessoriesVspec
+                        WHERE
+                          (XXCODE = 20)
+                      ) AS A1
+                      LEFT OUTER JOIN (
+                        SELECT
+                          STKNUM,
+                          TARMAGIC,
+                          XXCODE,
+                          CASE
+                            WHEN XXCODE = 20 THEN 1
+                            WHEN XXCODE = 21 THEN 2
+                            ELSE NULL
+                          END AS MKXXCODE
+                        FROM
+                          largefiles.SR_XX_QuoteDetails
+                        WHERE
+                          (
+                            REGDATE < (
+                              SELECT
+                                MIN(REGDATE) AS REGDATE
+                              FROM
+                                largefiles.VS_XX_NewVehicleStock
+                            )
+                          )
+                          AND (
+                            REGDATE BETWEEN '1980-01-01'
+                            AND 'xx'
+                          )
+                          AND (
+                            CONCAT_WS(TARMAGIC, XXCODE, 0) IN (
+                              SELECT
+                                DISTINCT CONCAT_WS(TARMAGIC, XXCODE, 0) AS CONCATMAGIC
+                              FROM
+                                largefiles.SR_XX_QuoteDetails AS SR_XX_QuoteDetails_1
+                              WHERE
+                                (
+                                  REGDATE < (
+                                    SELECT
+                                      MIN(REGDATE) AS REGDATE
+                                    FROM
+                                      largefiles.VS_XX_NewVehicleStock AS VS_XX_NewVehicleStock_3
+                                  )
+                                )
+                                AND (
+                                  REGDATE BETWEEN add_months( 'xx',-12)
+                                  AND 'xx'
+                                )
+                            )
+                          )
+                      ) AS A2 ON A1.MAGIC = A2.STKNUM
+                      AND A1.XXCODE = A2.XXCODE
+                    UNION ALL
+                    SELECT
+                      A3.REV,
+                      A3.GP,
+                      A4.VEHICLE,
+                      A4.MKXXCODE
+                    FROM
+                      (
+                        SELECT
+                          INVALUE + VAT AS REV,
+                          INVALUE - ACTCOST AS GP,
+                          MAGIC,
+                          XXCODE
+                        FROM
+                          largefiles.VS_XX_VehicleSpecification
+                        WHERE
+                          (XXCODE = 20)
+                      ) AS A3
+                      LEFT OUTER JOIN (
+                        SELECT
+                          VEHICLE,
+                          TARMAGIC,
+                          XXCODE,
+                          CASE
+                            WHEN XXCODE = 20 THEN 1
+                            WHEN XXCODE = 21 THEN 2
+                            ELSE NULL
+                          END AS MKXXCODE
+                        FROM
+                          largefiles.VS_XX_NewVehicleStock AS VS_XX_NewVehicleStock_2
+                        WHERE
+                          (
+                            REGDATE BETWEEN '1980-01-01'
+                            AND 'xx'
+                          )
+                          AND (
+                            CONCAT_WS(TARMAGIC, XXCODE, 0) IN (
+                              SELECT
+                                DISTINCT CONCAT_WS(TARMAGIC, XXCODE, 0) AS CONCATMAGIC
+                              FROM
+                                largefiles.VS_XX_NewVehicleStock AS VS_XX_NewVehicleStock_1
+                              WHERE
+                                (
+                                  REGDATE BETWEEN add_months( 'xx',-12)
+                                  AND 'xx'
+                                )
+                            )
+                          )
+                      ) AS A4 ON A3.MAGIC = A4.VEHICLE
+                      AND A3.XXCODE = A4.XXCODE
+                  ) AS A5
+                GROUP BY
+                  STKNUM,
+                  MKXXCODE
+              ) AS A
+              LEFT OUTER JOIN (
+                SELECT
+                  MAGIC,
+                  TARMAGIC001,
+                  XXCODE,
+                  FRAN
+                FROM
+                  largefiles.MK_XX_VehicleRecords
+                WHERE
+                  (FRAN <> '')
+              ) AS B ON A.STKNUM = B.MAGIC
+              AND A.MKXXCODE = B.XXCODE
+              LEFT OUTER JOIN (
+                SELECT
+                  LETTER,
+                  CODE
+                FROM
+                  largefiles.LUT_DD_XX_FranchiseRecords
+                WHERE
+                  (CODE = 'MBP')
+              ) AS C ON B.FRAN = C.LETTER
+              LEFT OUTER JOIN (
+                SELECT
+                  MAGIC,
+                  XXCODE,
+                  CUSTHASH
+                  /*, TENURE*/
+                FROM
+                  largefiles.ALSG_MK_XX_TargetRecords
+              ) AS D ON B.TARMAGIC001 = D.MAGIC
+              AND B.XXCODE = D.XXCODE
+            GROUP BY
+              D.CUSTHASH,
+              C.CODE
+    format_properties:
+      clean_column_name: false
+schema:
+  schema_derivation_strategy: "source"
+  strict_schema_check: true
+  discard: true

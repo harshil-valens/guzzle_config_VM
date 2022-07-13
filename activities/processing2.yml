@@ -1,0 +1,25 @@
+version: 1
+job:
+  type: "processing"
+source:
+  endpoint: "delta"
+  properties:
+    table: "employee"
+target:
+  endpoint: "delta"
+  operation: "merge"
+  incremental: true
+  soft_delete: false
+  properties:
+    table: "target_emp"
+    template: "default"
+  primary_key_columns:
+  - "id"
+  additional_columns:
+  - name: "created_at"
+    framework_column: "w_created_ts"
+  - name: "refresh_at"
+    framework_column: "w_refresh_ts"
+  - name: "record_flag"
+    framework_column: "w_current_record_flag"
+folder: "/test_with_new_app"
