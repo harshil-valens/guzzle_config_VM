@@ -1,3 +1,13 @@
 version: 1
-context_stage_mappings: []
+context_stage_mappings:
+- context: {}
+  stage_pairs:
+  - "SRI,FND"
+  stages:
+  - name: "SRI"
+    job_groups:
+    - "test"
+  - name: "FND"
+    job_groups:
+    - "generic_pipeline"
 folder: "/new_approach"
