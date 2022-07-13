@@ -23,7 +23,7 @@ schema:
 target:
   endpoint: "delta2"
   properties:
-    table: "test_new_app"
+    table: "data_gitbranch"
     auto_create_table: true
     merge_schema: false
   operation: "append"
