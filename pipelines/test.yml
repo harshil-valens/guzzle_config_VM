@@ -5,7 +5,6 @@ properties:
   auto_dependency: true
 jobs:
 - "test_new_app"
-- "recon_demo"
 - "processing2"
 - "processing2_hive"
 - "dq"
