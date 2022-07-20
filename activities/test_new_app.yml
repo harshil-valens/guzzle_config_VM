@@ -23,8 +23,9 @@ schema:
 target:
   endpoint: "delta2"
   properties:
-    table: "data_gitbranch"
+    table: "test_new_app"
     auto_create_table: true
     merge_schema: false
-  operation: "append"
+    overwrite_schema: false
+  operation: "overwrite"
 folder: "/test_with_new_app"
